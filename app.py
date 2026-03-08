@@ -198,42 +198,7 @@ class App:
                         with gr.Row():
                             file_subs = gr.Files(type="filepath", label=_("Upload Subtitle Files to translate here"))
 
-                        with gr.TabItem(_("DeepL API")):  # sub tab1
-                            with gr.Row():
-                                tb_api_key = gr.Textbox(label=_("Your Auth Key (API KEY)"),
-                                                        value=deepl_params["api_key"])
-                            with gr.Row():
-                                dd_source_lang = gr.Dropdown(label=_("Source Language"),
-                                                             value=AUTOMATIC_DETECTION if deepl_params["source_lang"] == AUTOMATIC_DETECTION.unwrap()
-                                                             else deepl_params["source_lang"],
-                                                             choices=list(self.deepl_api.available_source_langs.keys()))
-                                dd_target_lang = gr.Dropdown(label=_("Target Language"),
-                                                             value=deepl_params["target_lang"],
-                                                             choices=list(self.deepl_api.available_target_langs.keys()))
-                            with gr.Row():
-                                cb_is_pro = gr.Checkbox(label=_("Pro User?"), value=deepl_params["is_pro"])
-                            with gr.Row():
-                                cb_timestamp = gr.Checkbox(value=translation_params["add_timestamp"],
-                                                           label=_("Add a timestamp to the end of the filename"),
-                                                           interactive=True)
-                            with gr.Row():
-                                btn_run = gr.Button(_("TRANSLATE SUBTITLE FILE"), variant="primary")
-                            with gr.Row():
-                                tb_indicator = gr.Textbox(label=_("Output"), scale=5)
-                                files_subtitles = gr.Files(label=_("Downloadable output file"), scale=3)
-                                btn_openfolder = gr.Button('📂', scale=1)
-
-                        btn_run.click(fn=self.deepl_api.translate_deepl,
-                                      inputs=[tb_api_key, file_subs, dd_source_lang, dd_target_lang,
-                                              cb_is_pro, cb_timestamp],
-                                      outputs=[tb_indicator, files_subtitles])
-
-                        btn_openfolder.click(
-                            fn=lambda: self.open_folder(os.path.join(self.args.output_dir, "translations")),
-                            inputs=None,
-                            outputs=None)
-
-                        with gr.TabItem(_("NLLB")):  # sub tab2
+                        with gr.TabItem(_("NLLB")):  # sub tab1
                             with gr.Row():
                                 dd_model_size = gr.Dropdown(label=_("Model"), value=nllb_params["model_size"],
                                                             choices=self.nllb_inf.available_models)
@@ -262,6 +227,41 @@ class App:
                         btn_run.click(fn=self.nllb_inf.translate_file,
                                       inputs=[file_subs, dd_model_size, dd_source_lang, dd_target_lang,
                                               nb_max_length, cb_timestamp],
+                                      outputs=[tb_indicator, files_subtitles])
+
+                        btn_openfolder.click(
+                            fn=lambda: self.open_folder(os.path.join(self.args.output_dir, "translations")),
+                            inputs=None,
+                            outputs=None)
+
+                        with gr.TabItem(_("DeepL API")):  # sub tab2
+                            with gr.Row():
+                                tb_api_key = gr.Textbox(label=_("Your Auth Key (API KEY)"),
+                                                        value=deepl_params["api_key"])
+                            with gr.Row():
+                                dd_source_lang = gr.Dropdown(label=_("Source Language"),
+                                                             value=AUTOMATIC_DETECTION if deepl_params["source_lang"] == AUTOMATIC_DETECTION.unwrap()
+                                                             else deepl_params["source_lang"],
+                                                             choices=list(self.deepl_api.available_source_langs.keys()))
+                                dd_target_lang = gr.Dropdown(label=_("Target Language"),
+                                                             value=deepl_params["target_lang"],
+                                                             choices=list(self.deepl_api.available_target_langs.keys()))
+                            with gr.Row():
+                                cb_is_pro = gr.Checkbox(label=_("Pro User?"), value=deepl_params["is_pro"])
+                            with gr.Row():
+                                cb_timestamp = gr.Checkbox(value=translation_params["add_timestamp"],
+                                                           label=_("Add a timestamp to the end of the filename"),
+                                                           interactive=True)
+                            with gr.Row():
+                                btn_run = gr.Button(_("TRANSLATE SUBTITLE FILE"), variant="primary")
+                            with gr.Row():
+                                tb_indicator = gr.Textbox(label=_("Output"), scale=5)
+                                files_subtitles = gr.Files(label=_("Downloadable output file"), scale=3)
+                                btn_openfolder = gr.Button('📂', scale=1)
+
+                        btn_run.click(fn=self.deepl_api.translate_deepl,
+                                      inputs=[tb_api_key, file_subs, dd_source_lang, dd_target_lang,
+                                              cb_is_pro, cb_timestamp],
                                       outputs=[tb_indicator, files_subtitles])
 
                         btn_openfolder.click(
