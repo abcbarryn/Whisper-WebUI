@@ -25,7 +25,8 @@ class App:
     def __init__(self, args):
         self.args = args
         # Check every 1 hour (3600) for cached files and delete them if older than 1 day (86400)
-        self.app = gr.Blocks(css=CSS, theme=self.args.theme, delete_cache=(3600, 86400), title="Whisper-WebUI")
+        self.default_params = load_yaml(DEFAULT_PARAMETERS_CONFIG_PATH)
+        self.app = gr.Blocks(css=CSS, theme=self.args.theme, delete_cache=(3600, 86400), title=self.default_params["whisper"]["title"])
         self.whisper_inf = WhisperFactory.create_whisper_inference(
             whisper_type=self.args.whisper_type,
             whisper_model_dir=self.args.whisper_model_dir,
@@ -42,7 +43,6 @@ class App:
             output_dir=os.path.join(self.args.output_dir, "translations")
         )
         self.i18n = load_yaml(I18N_YAML_PATH)
-        self.default_params = load_yaml(DEFAULT_PARAMETERS_CONFIG_PATH)
         logger.info(f"Use \"{self.args.whisper_type}\" implementation\n"
                     f"Device \"{self.whisper_inf.device}\" is detected")
 
@@ -109,7 +109,7 @@ class App:
             with Translate(self.i18n):  # Add `lang = lang` here to test dynamic change of the languages.
                 with gr.Row():
                     with gr.Column(scale=10):
-                        gr.HTML("<h1><a href=https://github.com/jhj0517/Whisper-WebUI style='text-decoration: none; color: inherit;'>Whisper-WebUI</a></h1>")
+                        gr.HTML("<h1><a href="+self.default_params["whisper"]["gh_url"]+" style='text-decoration: none; color: inherit;'>"+self.default_params["whisper"]["title"]+"</a></h1>")
                         # gr.Markdown(MARKDOWN, elem_id="md_project")
                     with gr.Column(scale=1, min_width=100):
                         # Define a function that returns the JavaScript code for dark mode
