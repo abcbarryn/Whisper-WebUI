@@ -108,8 +108,24 @@ class App:
                             )
             with Translate(self.i18n):  # Add `lang = lang` here to test dynamic change of the languages.
                 with gr.Row():
-                    with gr.Column():
-                        gr.Markdown(MARKDOWN, elem_id="md_project")
+                    with gr.Column(scale=10):
+                        gr.HTML("<h1><a href=https://github.com/jhj0517/Whisper-WebUI style='text-decoration: none; color: inherit;'>Whisper-WebUI</a></h1>")
+                        # gr.Markdown(MARKDOWN, elem_id="md_project")
+                    with gr.Column(scale=1, min_width=100):
+                        # Define a function that returns the JavaScript code for dark mode
+                        def dark_mode():
+                            return """
+                                () => {
+                                    document.body.classList.toggle('dark');
+                                }
+                            """
+
+                        btn = gr.Button("Dark Mode")
+
+                        # Attach the JavaScript code to the button click event
+                        js_code = dark_mode()
+                        btn.click(None, [], [], js=js_code)
+
                 with gr.Tabs():
                     with gr.TabItem(_("File")):  # tab1
                         with gr.Column():
