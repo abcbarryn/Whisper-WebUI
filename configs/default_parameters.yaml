@@ -1,6 +1,4 @@
 whisper:
-  gh_url: https://github.com/jhj0517/Whisper-WebUI
-  title: Whisper-WebUI
   model_size: base
   lang: Automatic Detection
   is_translate: false
@@ -43,7 +41,7 @@ vad:
   min_silence_duration_ms: 1000
   speech_pad_ms: 2000
 diarization:
-  is_diarize: true
+  is_diarize: false
   diarization_device: cuda
   hf_token: ''
   enable_offload: true
